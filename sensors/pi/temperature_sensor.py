@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-=======
-#import debugpy
-#debugpy.listen(('192.168.1.191', 5678))
-#debugpy.wait_for_client()
-#
->>>>>>> c2fb309f5c728abbc80b089de8ce5823e6d1bb55
 import time
 import glob
 import json
@@ -14,9 +7,6 @@ from nanpy import SerialManager
 import sys
 import RPi.GPIO as GPIO
  
-base_dir = '/sys/bus/w1/devices/'
-device_folder = glob.glob(base_dir + '28*')[0]
-device_file = device_folder + '/w1_slave'
 
 class TemperatureSensor(Sensor):
 
@@ -25,10 +15,12 @@ class TemperatureSensor(Sensor):
         return
 
     def init_sensor(self):
-        self.sensor = "DS18B20"
+        base_dir = '/sys/bus/w1/devices/'
+        device_folder = glob.glob(base_dir + '28*')[0]
+        self.sensor = device_folder + '/w1_slave'
 
     def read_raw(self):
-        f = open(device_file, 'r')
+        f = open(self.device_file, 'r')
         lines = f.readlines()
         f.close()
         return lines
